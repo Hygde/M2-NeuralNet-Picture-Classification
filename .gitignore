@@ -1,0 +1,17 @@
+#all vscode files
+.vscode
+
+#all files of the dataset
+*.jpg
+*.jpeg
+*.txt
+*.xlsx
+*.pts
+
+#all keras files
+*.h5
+*.json
+
+#archive
+*.zip
+*.tgz

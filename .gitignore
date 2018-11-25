@@ -1,6 +1,9 @@
 #all vscode files
 .vscode
 
+#all python cache
+__pycache__
+
 #all files of the dataset
 *.jpg
 *.jpeg

@@ -9,7 +9,7 @@ class Network:
     def __init__(self):
         self.input_shape = (350, 350, 3)
         self.batch_size = 32
-        self.epochs = 6
+        self.epochs = 4
         self.nb_train_samples = 12922#nb of pic in train dir
         self.nb_validation_samples = 11726#nb of pic in test dir
         self.model = None

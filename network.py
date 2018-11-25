@@ -9,9 +9,9 @@ class Network:
     def __init__(self):
         self.input_shape = (350, 350, 3)
         self.batch_size = 32
-        self.epochs = 12
-        self.nb_train_samples = 12928#nb of pic in train dir
-        self.nb_validation_samples = 2206#nb of pic in test dir
+        self.epochs = 6
+        self.nb_train_samples = 12922#nb of pic in train dir
+        self.nb_validation_samples = 11726#nb of pic in test dir
         self.model = None
 
     def createNetwork(self):
@@ -57,7 +57,8 @@ if __name__ == "__main__":
     
     if not os.path.isfile("model.h5"):
         net.compileNet()
-        net.fitNetwork("./dataset/Images/train", "./dataset/Images/test")
+        net.fitNetwork("./data/train", "./data/test")
+        net.saveModel()
     else:
         net.loadModel()
     

@@ -7,17 +7,17 @@ from takeapic import TakeAPic
 
 class Network:
     def __init__(self):
-        self.input_shape = (350, 350, 3)
+        self.input_shape = (92, 92, 3)
         self.batch_size = 32
         self.epochs = 4
-        self.nb_train_samples = 12922#nb of pic in train dir
-        self.nb_validation_samples = 11726#nb of pic in test dir
+        self.nb_train_samples = 41168#nb of pic in train dir
+        self.nb_validation_samples = 40069#nb of pic in test dir
         self.model = None
 
     def createNetwork(self):
         self.model = Sequential()
-        self.model.add(Conv2D(8, kernel_size=(4,4), strides=(1,1), padding="same", activation="relu", input_shape=self.input_shape))
-        self.model.add(Conv2D(18, kernel_size=(3,3), strides=(1,1), padding="same", activation="relu"))
+        self.model.add(Conv2D(32, kernel_size=(4,4), strides=(1,1), padding="same", activation="relu", input_shape=self.input_shape))
+        self.model.add(Conv2D(64, kernel_size=(4,4), strides=(1,1), padding="same", activation="relu"))
         self.model.add(MaxPooling2D(pool_size=(2,2)))
         self.model.add(Dropout(rate = 0.25))
 
@@ -28,9 +28,9 @@ class Network:
         self.model.add(Dropout(rate = 0.25))
 
         self.model.add(Flatten())
-        self.model.add(Dense(512, activation="relu"))
+        self.model.add(Dense(1024, activation="relu"))
         self.model.add(Dropout(rate = 0.5))
-        self.model.add(Dense(3, activation="softmax"))
+        self.model.add(Dense(4, activation="softmax"))
 
     def compileNet(self):
         self.model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
@@ -38,8 +38,8 @@ class Network:
 
     def fitNetwork(self, train_dir_path, test_dir_path):
         datagen = ImageDataGenerator(rescale=1./255)
-        train_generator  = datagen.flow_from_directory(train_dir_path, target_size=(350,350), batch_size=self.batch_size)
-        test_generator = datagen.flow_from_directory(test_dir_path, target_size=(350,350), batch_size=self.batch_size)
+        train_generator  = datagen.flow_from_directory(train_dir_path, target_size=(92,92), batch_size=self.batch_size)
+        test_generator = datagen.flow_from_directory(test_dir_path, target_size=(92,92), batch_size=self.batch_size)
         self.model.fit_generator(train_generator, steps_per_epoch=self.nb_train_samples // self.batch_size, epochs=self.epochs, validation_data=test_generator, validation_steps=self.nb_validation_samples // self.batch_size)
 
     def saveModel(self):
@@ -63,6 +63,6 @@ if __name__ == "__main__":
         net.loadModel()
     
     cam = TakeAPic()
-    pic = cam.getPicture()
-    pic = cam.picFormatter(pic, (350,350), 3)
+    pic = cam.getPicture()#cam.loadImg("moche.jpg")#
+    pic = cam.picFormatter(pic, (92,92), 3)
     net.networkPredict(pic)

@@ -1,5 +1,7 @@
 import os
 import sys
+from math import pow
+import matplotlib.pyplot as plt
 from keras.preprocessing.image import ImageDataGenerator
 
 class ArchProcessing:
@@ -15,14 +17,11 @@ class ArchProcessing:
             os.mkdir("data")
             os.mkdir("data/train")
             os.mkdir("data/test")
-            os.mkdir("data/validation")
             for iclass in range(nclass):
                 os.mkdir("data/train/"+str(iclass))
                 os.mkdir("data/train/"+str(iclass)+"/originals")
                 os.mkdir("data/test/"+str(iclass))
                 os.mkdir("data/test/"+str(iclass)+"/originals")
-                os.mkdir("data/validation/"+str(iclass))
-                os.mkdir("data/validation/"+str(iclass)+"/originals")
         except:
             print("Directories already exist")
 
@@ -33,13 +32,23 @@ class ArchProcessing:
             f.close()
         return li
 
+    def plotData(self, li):
+        tmp = []
+        for data in li: tmp.append(float(data[1]))
+        tmp.sort()
+        plt.plot([i for i in range(len(tmp))], tmp)
+        plt.show()
+
     def updateNotes(self, li):
         for data in li:
-            score = int(round(float(data[1])))
-            if(score <= 2):score = 0
-            elif(score == 3):score = 1
-            elif(score > 3):score = 2
+            score = pow(float(data[1])-1.0, 2)
+            #todo: automate the following part
+            if(score < 2.25):score = 0
+            elif(score >= 2.25 and score < 3.3612):score = 1
+            elif(score >= 3.3612 and score < 6.4178):score = 2
+            else: score = 3
             data[1] = score
+        
 
     def moveToFolder(self, data, src_path, dst_path):
         print(src_path)
@@ -58,7 +67,7 @@ class ArchProcessing:
             i = 0
             for _ in gen:
                 i += 1
-                if(i>100):break#todo: find a way to remove break
+                if(i>300):break#todo: find a way to remove break
 
 if __name__ == "__main__":
     if len(sys.argv) >= 3:
@@ -69,10 +78,12 @@ if __name__ == "__main__":
         arch.createClassDir(nclasses)
         
         li = arch.getFileContent("SCUT-FBP5500_v2/train_test_files/split_of_60%training and 40%testing/train.txt")
+        arch.plotData(li)
         arch.updateNotes(li)
         arch.moveToFolder(li, "SCUT-FBP5500_v2/Images/", "data/train/")
 
         li = arch.getFileContent("SCUT-FBP5500_v2/train_test_files/split_of_60%training and 40%testing/test.txt")
+        arch.plotData(li)
         arch.updateNotes(li)
         arch.moveToFolder(li, "SCUT-FBP5500_v2/Images/", "data/test/")
 

@@ -3,10 +3,18 @@
 
 #all python cache
 __pycache__
+32x32
+64x64
+data
+data_v2
+
 
 #all files of the dataset
+data
 *.jpg
 *.jpeg
+*.bmp
+*.png
 *.txt
 *.xlsx
 *.pts
@@ -18,3 +26,6 @@ __pycache__
 #archive
 *.zip
 *.tgz
+
+#script files
+*.sh
